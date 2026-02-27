@@ -60,23 +60,24 @@ Downloads
 
 
 ## Options
-`classifier [-dt] [-st SPECIFIC_TYPES [SPECIFIC_TYPES ...]] [-sf SPECIFIC_FOLDER] [-o OUTPUT]`
+`classifier [-dt] [-st SPECIFIC_TYPES [SPECIFIC_TYPES ...]] [-sf SPECIFIC_FOLDER] [-o OUTPUT] [-f FILE]`
 
 optional arguments:
 
 	-h --help				show help message and exit
-	
+
 	-dt --date				Classify the files by their Creation Date
 	-st --specific-types			Move the specific file extensions into the Specific Folder
 	-sf --specific-folder			Folder to move files with Specific Type
-	
+
 	-d --directory				The directory whose files you want to classify
 	-o --output				Main directory to put organized folders
-	
+	-f --file				Full path to config file (default: ~/.classifier-master.conf)
+
 	-v --version         			show version
 	-t --types           			Show the current list of types and formats
 	-et --edittypes      			Edit the list of types and formats (edit the CONFIG)
-	
+
 	-rst					Reset the CONFIG file
 
 
@@ -130,9 +131,9 @@ This classifies the directory /home/source.
 
 ### Reset the CONFIG file
 `classifier -rst`
-```
 
-```
+### Use a custom CONFIG file
+`classifier -f /path/to/my-config.conf`
 
 ======
 

@@ -89,7 +89,15 @@ class Classifier:
         self.parser.add_argument("-df", "--dateformat", type=str,
                                  help="set the date format using YYYY, MM or DD")
 
+        self.parser.add_argument("-f", "--file", type=str,
+                                 help="Full path to the config file to use "
+                                      "(default: ~/.classifier-master.conf)")
+
         self.args = self.parser.parse_args()
+        if self.args.file:
+            self.config = self.args.file
+        else:
+            self.config = CONFIG
         self.dateformat = 'YYYY-MM-DD'
         self.formats = {}
         self.dirconf = None
@@ -97,7 +105,7 @@ class Classifier:
         self.run()
 
     def create_default_config(self):
-        with open(CONFIG, "w") as conffile:
+        with open(self.config, "w") as conffile:
             conffile.write("IGNORE: part, desktop\n" +
                            "Music: mp3, aac, flac, ogg, wma, m4a, aiff, wav, amr\n" +
                            "Videos: flv, ogv, avi, mp4, mpg, mpeg, 3gp, mkv, ts, webm, vob, wmv\n" +
@@ -109,16 +117,17 @@ class Classifier:
                            "DEBPackages: deb\n" +
                            "Programs: exe, msi\n" +
                            "RPMPackages: rpm")
-        print("CONFIG file created at: "+CONFIG)
+        print("CONFIG file created at: "+self.config)
 
     def checkconfig(self):
         """ create a default config if not available """
-        if not os.path.isdir(os.path.dirname(CONFIG)):
-            os.makedirs(os.path.dirname(CONFIG))
-        if not os.path.isfile(CONFIG):
+        config_dir = os.path.dirname(self.config)
+        if config_dir and not os.path.isdir(config_dir):
+            os.makedirs(config_dir)
+        if not os.path.isfile(self.config):
             self.create_default_config()
 
-        with open(CONFIG, 'r') as file:
+        with open(self.config, 'r') as file:
             for items in file:
                 spl = items.replace('\n', '').split(':')
                 key = spl[0].replace(" ","")
@@ -208,11 +217,11 @@ class Classifier:
 
         if self.args.edittypes:
             if PLATFORM == 'darwin':
-                subprocess.call(('open', '-t', CONFIG))
+                subprocess.call(('open', '-t', self.config))
             elif PLATFORM == 'win32' or OS == 'nt':
-                os.startfile(CONFIG)
+                os.startfile(self.config)
             elif PLATFORM == 'linux' or PLATFORM == 'linux2' or OS == 'posix':
-                subprocess.Popen(['xdg-open', CONFIG])
+                subprocess.Popen(['xdg-open', self.config])
             return False
 
         if self.args.reset:
